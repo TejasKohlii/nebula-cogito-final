@@ -5,6 +5,9 @@ logic synthesis, static timing analysis, timing and RTL analysis, live progress,
 and a browser-based interface. It can optimize the included **Liberica** and
 **Excelsa** designs or prepare a user-supplied Verilog/SystemVerilog project.
 
+Demo Video Link  - https://youtu.be/vzXhMgP07HI
+Techincal Report - https://drive.google.com/file/d/1k4m-lXYdkBRdDKyP7aXb7DqkyImF2DP1/view?usp=sharing 
+
 Cogito supports two Claude connections:
 
 - **Claude Code CLI** through the pinned Headless bridge.
