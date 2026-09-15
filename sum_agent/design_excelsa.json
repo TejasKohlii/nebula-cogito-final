@@ -1,0 +1,17 @@
+{
+  "task": "shinka_optimizer/tasks/window_engine_excelsa.json",
+  "source": "custom_designs/custom_design_v1/rtl/benchmark.sv",
+  "top": "benchmark",
+  "parameters": [
+    "DEPTH=40"
+  ],
+  "liberty": "third_party/nangate45/NangateOpenCellLibrary_typical.lib",
+  "sdc": "custom_designs/custom_design_v1/constraints/benchmark.sdc",
+  "design_cwd": "custom_designs/custom_design_v1",
+  "yosys": "yosys",
+  "sta": "sta",
+  "path_base": "..",
+  "final_netlist": "{verification}/results/design/build/benchmark_mapped.v",
+  "final_design_cwd": "{verification}/results/design",
+  "prepare_benchmark": true
+}

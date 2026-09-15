@@ -1,0 +1,7 @@
+Nangate Open Cell Library, typical corner
+
+Copyright (c) 2004-2011 Nangate Inc.
+Source: https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/lib/NangateOpenCellLibrary_typical.lib
+SHA-256: 8d540a4d4cf6d09d27c87ad067857a9c0c2eeb023ab7a56e058cd3113db4e9b1
+Platform license: https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts/blob/master/flow/platforms/nangate45/LICENSE
+The original library header is retained. The platform license is included.

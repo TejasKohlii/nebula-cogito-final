@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Cogito</title>
+<link rel="icon" href="cogito-logo.svg">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
+  <symbol id="i-system" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4" width="19" height="13" rx="2"/><path d="M8 20h8"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 9.5 18 20 6.5"/></symbol>
+  <symbol id="i-folder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A1.5 1.5 0 0 1 4.5 6h4L11 8.5h8.5A1.5 1.5 0 0 1 21 10v8a1.5 1.5 0 0 1-1.5 1.5h-15A1.5 1.5 0 0 1 3 18z"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24" fill="currentColor"><path d="M7 4.8v14.4l12-7.2z"/></symbol>
+  <symbol id="i-tree" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="2.2"/><circle cx="19" cy="6" r="2.2"/><circle cx="19" cy="18" r="2.2"/><path d="M7.2 11 16.8 6.8M7.2 13l9.6 4.2"/></symbol>
+  <symbol id="i-expand" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H4v5M15 20h5v-5M20 9V4h-5M4 15v5h5"/></symbol>
+  <symbol id="i-shrink" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9h5V4M20 15h-5v5M15 4v5h5M9 20v-5H4"/></symbol>
+  <symbol id="i-chevron-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15l7-7 7 7"/></symbol>
+  <symbol id="i-chevron-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 9l7 7 7-7"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14"/></symbol>
+  <symbol id="i-fit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="14" rx="2"/><path d="M8 12h8M12 8v8"/></symbol>
+  <symbol id="i-prev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 6l-6 6 6 6"/></symbol>
+  <symbol id="i-next" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6l6 6-6 6"/></symbol>
+  <symbol id="i-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6M6 12l6-6 6 6"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+  <symbol id="i-maximize" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="2.5"/></symbol>
+  <symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M7.5 10.5 12 15l4.5-4.5M4 19h16"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13M10 11v6M14 11v6"/></symbol>
+  <symbol id="i-restore" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="7" width="13" height="13" rx="2.5"/><path d="M4 15V6.5A2.5 2.5 0 0 1 6.5 4H15"/></symbol>
+</svg>
+
+<header class="topbar">
+  <div class="brand">
+    <span class="mark" id="brand-mark"></span>
+    <span class="wordmark">cogito</span>
+  </div>
+  <div class="spacer"></div>
+  <div class="segmented" id="theme" role="radiogroup" aria-label="Theme">
+    <button role="radio" data-theme-choice="light" aria-checked="false" title="Light"><svg><use href="#i-sun"/></svg></button>
+    <button role="radio" data-theme-choice="dark" aria-checked="false" title="Dark"><svg><use href="#i-moon"/></svg></button>
+    <button role="radio" data-theme-choice="system" aria-checked="true" title="System"><svg><use href="#i-system"/></svg></button>
+  </div>
+</header>
+
+<main class="layout">
+
+<aside class="settings">
+    <div class="settings-scroll">
+      <section class="group">
+        <h2>RTL design</h2>
+        <div class="cards" id="design-cards"></div>
+      </section>
+
+      <section class="group">
+        <h2>Cost budget</h2>
+        <div class="budget">
+          <div class="budget-field">
+            <span class="currency">$</span>
+            <input id="budget" type="number" min="0.5" step="0.5" value="10" inputmode="decimal" aria-label="Budget in US dollars">
+          </div>
+          <div class="presets" id="budget-presets">
+            <button data-amount="5">5</button>
+            <button data-amount="10">10</button>
+            <button data-amount="25">25</button>
+            <button data-amount="50">50</button>
+          </div>
+          <div class="meter"><i id="cost-meter"></i></div>
+          <div class="spent idle" id="cost-spent">
+            <span>Spent</span><b id="cost-value">$0.0000</b>
+          </div>
+        </div>
+      </section>
+
+      <section class="group">
+        <h2 id="connection-title">Claude connection</h2>
+        <div class="connection-options" aria-labelledby="connection-title">
+          <label><input type="radio" name="connection" value="cli"><span>Claude Code CLI</span></label>
+          <label><input type="radio" name="connection" value="api"><span>Anthropic API</span></label>
+        </div>
+        <p class="connection-note" id="connection-note">Choose how to connect to Claude.</p>
+        <div class="api-key-field" id="api-key-field" hidden>
+          <label for="api-key">Anthropic API key</label>
+          <input id="api-key" type="password" autocomplete="off" spellcheck="false" autocapitalize="none" placeholder="Enter your API key" aria-describedby="api-key-note" maxlength="4096">
+          <p class="connection-note" id="api-key-note">Used for this run. Not saved to disk or browser storage.</p>
+        </div>
+      </section>
+
+      <section class="group live" id="live" hidden>
+        <h2>Generation progress</h2>
+        <div class="generation-table-wrap">
+          <table class="generation-table" aria-label="Initial, current and best generation metrics">
+            <thead><tr><th scope="col">Metric</th><th scope="col"><span class="generation-heading" data-generation-column="initial">Initial<br><b>—</b></span></th><th scope="col"><span class="generation-heading" data-generation-column="current">Current gen<br><b>—</b></span></th><th scope="col"><span class="generation-heading" data-generation-column="best">Best gen<br><b>—</b></span></th></tr></thead>
+            <tbody>
+              <tr data-metric-row="wns"><th scope="row">WNS (ns)</th><td data-generation-column="initial" data-metric="wns">—</td><td data-generation-column="current" data-metric="wns">—</td><td data-generation-column="best" data-metric="wns">—</td></tr>
+              <tr data-metric-row="tns"><th scope="row">TNS (ns)</th><td data-generation-column="initial" data-metric="tns">—</td><td data-generation-column="current" data-metric="tns">—</td><td data-generation-column="best" data-metric="tns">—</td></tr>
+              <tr data-metric-row="power"><th scope="row">Power (W)</th><td data-generation-column="initial" data-metric="power">—</td><td data-generation-column="current" data-metric="power">—</td><td data-generation-column="best" data-metric="power">—</td></tr>
+              <tr data-metric-row="area"><th scope="row">Area (um²)</th><td data-generation-column="initial" data-metric="area">—</td><td data-generation-column="current" data-metric="area">—</td><td data-generation-column="best" data-metric="area">—</td></tr>
+            </tbody>
+          </table>
+        </div>
+          <div class="generation-elapsed"><span>Run time</span><b id="live-elapsed">—</b></div>
+      </section>
+    </div>
+
+    <div class="actions">
+      <button class="btn" id="optimize" disabled>
+        <span class="ico"><svg><use href="#i-play"/></svg></span><span class="lbl">Optimize</span>
+      </button>
+      <button class="btn ghost" id="viz-open" disabled>
+        <span class="ico"><svg><use href="#i-tree"/></svg></span><span class="lbl">Shinka visualizer</span>
+      </button>
+      <p class="hint" id="hint">Select a design to begin.</p>
+    </div>
+  </aside>
+
+  <section class="stage" id="stage">
+    <div class="watermark" id="watermark">
+      <span id="watermark-mark"></span>
+      <p>Select a design, budget and Claude connection, then press Optimize.</p>
+    </div>
+  </section>
+
+</main>
+
+<div class="scrim" id="viz-scrim" hidden>
+  <div class="dialog" id="viz-dialog" role="dialog" aria-modal="true" aria-label="Shinka Visualizer">
+    <header>
+      <h3>Shinka Visualizer</h3>
+      <span class="grow"></span>
+      <button class="icon-btn" id="viz-close" title="Close" aria-label="Close Shinka Visualizer"><svg><use href="#i-close"/></svg></button>
+    </header>
+    <iframe id="viz-frame" title="Shinka visualizer"></iframe>
+  </div>
+</div>
+
+<div class="scrim" id="folder-scrim" hidden>
+  <div class="dialog" id="folder-dialog" role="dialog" aria-modal="true" aria-label="Choose an RTL folder">
+    <header>
+      <h3>Choose an RTL folder</h3>
+      <span class="grow"></span>
+      <button class="icon-btn" id="folder-close" title="Close"><svg><use href="#i-close"/></svg></button>
+    </header>
+    <div class="crumb" id="folder-crumb"></div>
+    <div class="fs-list" id="folder-list"></div>
+    <footer>
+      <span class="fs-note" id="folder-note"></span>
+      <span class="grow"></span>
+      <button class="btn ghost" id="folder-cancel">Cancel</button>
+      <button class="btn" id="folder-pick" disabled>Use this folder</button>
+    </footer>
+  </div>
+</div>
+
+<div class="toast" id="toast" hidden></div>
+
+<script src="path-groups.js"></script>
+<script src="graph.js"></script>
+<script src="flow.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

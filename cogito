@@ -1,0 +1,202 @@
+#!/usr/bin/env python3
+"""Install, check, start, and stop the local Cogito application."""
+import argparse
+import json
+import os
+from pathlib import Path
+import shutil
+import signal
+import subprocess
+import sys
+import time
+
+ROOT = Path(__file__).resolve().parent
+PYTHON = ROOT / '.venv/bin/python'
+NODE_RUNTIME = ROOT / '.tools/node-runtime'
+
+
+def configure_tools():
+    settings = {}
+    for name in ('tools.json', 'tools.local.json'):
+        try:
+            data = json.loads((ROOT / 'cogito_webui' / name).read_text())
+            if isinstance(data, dict):
+                settings.update(data)
+        except (OSError, ValueError):
+            continue
+    for key in ('yosys', 'sta', 'verilator'):
+        value = settings.get(key)
+        if isinstance(value, str) and value and Path(value).is_file():
+            os.environ.setdefault(key.upper(), str(value))
+
+
+def executable(name, variable=None):
+    value = os.environ.get(variable or name.upper(), name)
+    resolved = shutil.which(value)
+    if not resolved:
+        raise RuntimeError(f'{name} is unavailable. Add it to PATH or set {variable or name.upper()}.')
+    return resolved
+
+
+def node(install=False):
+    # Explicit overrides win. Otherwise prefer the private runtime installed
+    # by setup, then a compatible Node already on PATH.
+    candidates = ([executable('node')] if os.environ.get('NODE') else
+                  [str(NODE_RUNTIME / 'node_modules/node/bin/node'), shutil.which('node')])
+    found = []
+    for candidate in candidates:
+        if not candidate or not Path(candidate).is_file():
+            continue
+        version = subprocess.check_output([candidate, '--version'], text=True).strip()
+        if int(version.lstrip('v').split('.')[0]) >= 22:
+            # npm and Headless use /usr/bin/env node. All child processes must
+            # receive the same runtime selected for the UI.
+            directory = str(Path(candidate).resolve().parent)
+            entries = os.environ.get('PATH', '').split(os.pathsep)
+            os.environ['PATH'] = os.pathsep.join([directory, *[p for p in entries if p != directory]])
+            return candidate
+        found.append(version)
+    if install and not os.environ.get('NODE'):
+        npm = executable('npm')
+        print('Installing a private Node.js 22 runtime for Cogito…', flush=True)
+        subprocess.run([npm, 'ci', '--prefix', str(NODE_RUNTIME), '--no-audit', '--no-fund'], check=True)
+        return node()
+    detail = ', '.join(found) or 'none'
+    remedy = 'Set NODE to a Node.js 22+ executable.' if os.environ.get('NODE') else 'Run python3 cogito setup to install a private runtime.'
+    raise RuntimeError(f'Node.js 22 or newer is required by Headless; found {detail}. {remedy}')
+
+
+def setup():
+    if sys.version_info < (3, 12):
+        raise RuntimeError('Python 3.12 or newer is required.')
+    node(install=True)
+    npm = executable('npm')
+    if not PYTHON.exists():
+        subprocess.run([sys.executable, '-m', 'venv', str(ROOT / '.venv')], check=True)
+    subprocess.run([str(PYTHON), '-m', 'ensurepip', '--upgrade'], check=True)
+    subprocess.run([str(PYTHON), '-m', 'pip', 'install', '-r', 'requirements.txt'], cwd=ROOT, check=True)
+    subprocess.run([npm, 'ci', '--prefix', str(ROOT / '.tools'), '--no-audit', '--no-fund'], check=True)
+    print('Installed. Run ./cogito doctor, then ./cogito start.')
+
+
+def doctor():
+    failures = []
+    def check(label, action, required=True):
+        try:
+            value = action()
+            print(f'OK   {label}: {value or "ready"}')
+        except (RuntimeError, OSError, subprocess.SubprocessError) as exc:
+            if required:
+                failures.append(label)
+            print(f'{"FAIL" if required else "OPTIONAL"} {label}: {exc}')
+    check('Node.js', node)
+    for tool in ('yosys', 'sta', 'verilator', 'dot', 'make', 'c++'):
+        check(tool, lambda tool=tool: executable(tool))
+    check('Slang (advanced SystemVerilog uploads)', lambda: subprocess.check_output(
+        [executable('yosys'), '-Q', '-T', '-p', 'plugin -i slang; help read_slang'],
+        stderr=subprocess.STDOUT, text=True) and 'available', required=False)
+    check('Claude CLI (CLI mode)', lambda: executable('claude', 'COGITO_CLAUDE'), required=False)
+    check('Headless (CLI mode)', lambda: subprocess.check_output(
+        [str(ROOT / '.tools/node_modules/.bin/headless'), '--version'], text=True).strip(), required=False)
+    check('Python runtime', lambda: subprocess.check_output([str(PYTHON), '-c',
+        'from shinka.core import ShinkaEvolveRunner; from shinka.webui import visualization; '
+        'import shinka; print(shinka.__file__)'], cwd=ROOT, text=True).strip())
+    check('Preset contracts', lambda: subprocess.check_output([str(PYTHON), '-c',
+        "import sys; from pathlib import Path; sys.path.insert(0, 'sum_agent'); "
+        "from design_config import load_config, task_contract; "
+        "[(task_contract(c, Path(c['source']))) for c in "
+        "[load_config('sum_agent/design.json'), load_config('sum_agent/design_excelsa.json')]]; "
+        "print('Liberica and Excelsa')"], cwd=ROOT, text=True).strip())
+    print('Choose CLI or API in the web UI. Authenticate claude for CLI, or enter an Anthropic API key for API.')
+    return bool(failures)
+
+
+def is_webserver(pid):
+    """Match this user's Node entry point to this checkout, including old launches."""
+    process = Path('/proc') / str(pid)
+    try:
+        if process.stat().st_uid != os.geteuid():
+            return False
+        if (process / 'exe').resolve().name not in ('node', 'nodejs'):
+            return False
+        argv = (process / 'cmdline').read_bytes().split(b'\0')
+        if len(argv) < 2 or not argv[1]:
+            return False
+        entry = Path(os.fsdecode(argv[1]))
+        if not entry.is_absolute():
+            entry = (process / 'cwd').resolve() / entry
+        return entry.resolve() == ROOT / 'cogito_webui/server/index.js'
+    except (OSError, ValueError):
+        return False  # Process exited, or belongs to another user.
+
+
+def stop():
+    if not Path('/proc/self/cmdline').is_file():
+        raise RuntimeError('Automatic server stopping requires Linux.')
+    stopped = []
+    for process in Path('/proc').iterdir():
+        if not process.name.isdigit() or not is_webserver(int(process.name)):
+            continue
+        pid = int(process.name)
+        descriptor = None
+        try:
+            # A pidfd prevents signalling a reused PID on supported kernels.
+            if hasattr(os, 'pidfd_open') and hasattr(signal, 'pidfd_send_signal'):
+                try:
+                    descriptor = os.pidfd_open(pid)
+                except OSError:
+                    pass  # Older kernels can still use the checked PID below.
+            if not is_webserver(pid):
+                continue
+            if descriptor is not None:
+                signal.pidfd_send_signal(descriptor, signal.SIGTERM)
+            else:
+                os.kill(pid, signal.SIGTERM)
+            stopped.append(pid)
+        except ProcessLookupError:
+            continue
+        finally:
+            if descriptor is not None:
+                os.close(descriptor)
+    if not stopped:
+        print('Cogito is not running for this checkout.')
+        return 0
+    # SIGTERM invokes the server's existing run/visualizer cancellation handler.
+    deadline = time.monotonic() + 10
+    while any(is_webserver(pid) for pid in stopped):
+        if time.monotonic() >= deadline:
+            raise RuntimeError('Stop requested, but the webserver has not exited yet. Try python3 cogito stop again.')
+        time.sleep(0.1)
+    print('Cogito stopped.')
+    return 0
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('command', choices=('setup', 'doctor', 'start', 'stop'))
+    args, remaining = parser.parse_known_args()
+    try:
+        if args.command != 'stop':
+            configure_tools()
+        if args.command == 'setup':
+            setup()
+        elif args.command == 'doctor':
+            return doctor()
+        elif args.command == 'stop':
+            if remaining:
+                parser.error('stop does not take additional arguments')
+            return stop()
+        else:
+            binary = node()
+            if not PYTHON.exists():
+                raise RuntimeError('Run ./cogito setup first.')
+            os.chdir(ROOT)
+            os.execv(binary, [binary, str(ROOT / 'cogito_webui/server/index.js'), *remaining])
+    except (RuntimeError, OSError, subprocess.SubprocessError) as exc:
+        print(f'Cogito: {exc}', file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

@@ -1,0 +1,20 @@
+[
+  {
+    "id": "liberica",
+    "name": "Liberica",
+    "subtitle": "Meets required specs",
+    "design": "custom_designs/custom_design_v2/rtl/benchmark.sv",
+    "config": "sum_agent/design.json",
+    "locked": false,
+    "facts": ["5 master domains", "15 clocks", "registered evaluator"]
+  },
+  {
+    "id": "excelsa",
+    "name": "Excelsa",
+    "subtitle": "Meets required specs",
+    "design": "custom_designs/custom_design_v1/rtl/benchmark.sv",
+    "config": "sum_agent/design_excelsa.json",
+    "locked": false,
+    "facts": ["5 master domains", "15 clocks", "registered evaluator"]
+  }
+]

@@ -1,0 +1,108 @@
+{
+  "workspace": "../..",
+  "name": "window_engine_excelsa",
+  "language": "verilog",
+  "seed": "timing_closure/initial_excelsa.sv",
+  "evaluator": "shinka_optimizer/adapters/window_engine.py",
+  "evaluation_timeout_seconds": 720,
+  "finalizer": "shinka_optimizer/adapters/finalize_window.py",
+  "finalizer_timeout_seconds": 900,
+  "model": "headless/claude@claude-sonnet-5?effort=medium",
+  "success": [
+    {
+      "metric": "formal_equivalence",
+      "op": "eq",
+      "value": true
+    },
+    {
+      "metric": "timing_closed",
+      "op": "eq",
+      "value": true
+    },
+    {
+      "metric": "wns_ns",
+      "op": "ge",
+      "value": 0
+    },
+    {
+      "metric": "tns_ns",
+      "op": "eq",
+      "value": 0
+    },
+    {
+      "metric": "violating_endpoints",
+      "op": "eq",
+      "value": 0
+    },
+    {
+      "metric": "standard_cells",
+      "op": "ge",
+      "value": 50000
+    },
+    {
+      "metric": "clock_count",
+      "op": "eq",
+      "value": 15
+    },
+    {
+      "metric": "constraint_warnings",
+      "op": "eq",
+      "value": 0
+    }
+  ],
+  "search": {
+    "islands": 2,
+    "archive_size": 40,
+    "archive_inspirations": 0,
+    "top_k_inspirations": 1,
+    "llm_kwargs": {
+      "temperatures": [
+        0
+      ],
+      "max_tokens": 10000
+    },
+    "parent_selection_strategy": "weighted"
+  },
+  "investigation": {
+    "max_evidence_chars": 100000,
+    "max_additional_reads": 4,
+    "reference_files": [
+      "shinka_optimizer/guidance/benchmark_requirements.txt.enc",
+      "shinka_optimizer/guidance/rtl_reasoning.txt.enc"
+    ]
+  },
+  "environment": {
+    "SHINKA_HEADLESS_TIMEOUT": "420",
+    "CLAUDE_CODE_BIN": "{workspace}/shinka_optimizer/claude_investigator.py",
+    "MPLCONFIGDIR": "{workspace}/.cache/matplotlib",
+    "XDG_CACHE_HOME": "{workspace}/.cache",
+    "COGITO_DESIGN_DIR": "{workspace}/custom_designs/custom_design_v1",
+    "COGITO_SCRIPTS_DIR": "{workspace}/custom_designs/custom_design_v1/scripts",
+    "COGITO_SEED": "{workspace}/timing_closure/initial_excelsa.sv"
+  },
+  "frozen_inputs": [
+    "shinka_optimizer/adapters/finalize_window.py",
+    "shinka_optimizer/adapters/experiment_policy.py",
+    "timing_closure/evaluate.py",
+    "timing_closure/implement.py",
+    "timing_closure/contract.py",
+    "timing_closure/initial_excelsa.sv",
+    "custom_designs/custom_design_v1/rtl/benchmark.sv",
+    "custom_designs/custom_design_v1/constraints/benchmark.sdc",
+    "third_party/nangate45/NangateOpenCellLibrary_typical.lib",
+    "custom_designs/custom_design_v1/tests/tb.sv",
+    "custom_designs/custom_design_v1/scripts/synth.py",
+    "custom_designs/custom_design_v1/scripts/run_sta.py",
+    "custom_designs/custom_design_v1/scripts/cdc_constraints.py",
+    "custom_designs/custom_design_v1/scripts/sta.tcl",
+    "custom_designs/custom_design_v1/scripts/endpoint_slacks.tcl",
+    "ShinkaEvolve/shinka/llm/providers/headless.py",
+    "shinka_optimizer/guidance/benchmark_requirements.txt.enc",
+    "shinka_optimizer/guidance/rtl_reasoning.txt.enc",
+    "ShinkaEvolve/shinka/core/async_runner.py",
+    "shinka_optimizer/adapters/power_window.py"
+  ],
+  "experiment_policy": true,
+  "allow_implementation_bundle": true,
+  "goal_file": "shinka_optimizer/guidance/window_engine_excelsa.goal.txt.enc"
+}

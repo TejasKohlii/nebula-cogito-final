@@ -1,0 +1,15 @@
+{
+  "source": "rtl/design.sv",
+  "task": "task.json",
+  "top": "design",
+  "sdc": "constraints/design.sdc",
+  "liberty": "technology/cells.lib",
+  "design_cwd": ".",
+  "yosys": "yosys",
+  "sta": "sta",
+  "parameters": [],
+  "additional_sources": [],
+  "include_dirs": [],
+  "defines": [],
+  "frontend": "verilog"
+}

@@ -1,0 +1,7 @@
+{
+  "name": "cogito-node-runtime",
+  "private": true,
+  "dependencies": {
+    "node": "22.23.2"
+  }
+}

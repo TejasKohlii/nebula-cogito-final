@@ -1,0 +1,16 @@
+{
+  "name": "cogito-webui",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local web UI for the Cogito RTL timing-closure pipeline",
+  "type": "commonjs",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node server/index.js --open",
+    "replay": "node server/index.js --replay latest"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "_comment": "Optional executable paths. Environment variables override these settings; null uses PATH.",
+  "yosys": null,
+  "sta": null,
+  "verilator": null
+}

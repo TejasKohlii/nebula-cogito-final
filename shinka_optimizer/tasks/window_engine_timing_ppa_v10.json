@@ -1,0 +1,125 @@
+{
+  "workspace": "../..",
+  "name": "window_engine_timing_ppa_v10",
+  "language": "verilog",
+  "seed": "timing_closure/initial.sv",
+  "evaluator": "shinka_optimizer/adapters/window_engine.py",
+  "evaluation_timeout_seconds": 720,
+  "finalizer": "shinka_optimizer/adapters/finalize_window.py",
+  "finalizer_timeout_seconds": 900,
+  "model": "headless/claude@claude-sonnet-5?effort=medium",
+  "success": [
+    {
+      "metric": "formal_equivalence",
+      "op": "eq",
+      "value": true
+    },
+    {
+      "metric": "timing_closed",
+      "op": "eq",
+      "value": true
+    },
+    {
+      "metric": "wns_ns",
+      "op": "ge",
+      "value": 0
+    },
+    {
+      "metric": "tns_ns",
+      "op": "eq",
+      "value": 0
+    },
+    {
+      "metric": "violating_endpoints",
+      "op": "eq",
+      "value": 0
+    },
+    {
+      "metric": "standard_cells",
+      "op": "ge",
+      "value": 50000
+    },
+    {
+      "metric": "clock_count",
+      "op": "eq",
+      "value": 15
+    },
+    {
+      "metric": "constraint_warnings",
+      "op": "eq",
+      "value": 0
+    },
+    {
+      "metric": "power_valid",
+      "op": "eq",
+      "value": true
+    }
+  ],
+  "search": {
+    "islands": 2,
+    "archive_size": 40,
+    "archive_inspirations": 2,
+    "top_k_inspirations": 1,
+    "llm_kwargs": {
+      "temperatures": [
+        0
+      ],
+      "max_tokens": 10000
+    },
+    "parent_selection_strategy": "weighted",
+    "parent_selection_lambda": 4
+  },
+  "investigation": {
+    "max_evidence_chars": 100000,
+    "max_additional_reads": 4,
+    "reference_files": [
+      "shinka_optimizer/guidance/window_engine_ppa.txt.enc",
+      "shinka_optimizer/guidance/window_engine_timing.txt.enc",
+      "shinka_optimizer/guidance/benchmark_requirements.txt.enc",
+      "shinka_optimizer/guidance/rtl_reasoning.txt.enc"
+    ]
+  },
+  "environment": {
+    "SHINKA_HEADLESS_TIMEOUT": "420",
+    "CLAUDE_CODE_BIN": "{workspace}/shinka_optimizer/claude_investigator.py",
+    "MPLCONFIGDIR": "{workspace}/.cache/matplotlib",
+    "XDG_CACHE_HOME": "{workspace}/.cache"
+  },
+  "frozen_inputs": [
+    "shinka_optimizer/adapters/finalize_window.py",
+    "shinka_optimizer/adapters/experiment_policy.py",
+    "timing_closure/evaluate.py",
+    "timing_closure/implement.py",
+    "timing_closure/contract.py",
+    "custom_designs/custom_design_v2/rtl/benchmark.sv",
+    "custom_designs/custom_design_v2/constraints/benchmark.sdc",
+    "third_party/nangate45/NangateOpenCellLibrary_typical.lib",
+    "custom_designs/custom_design_v2/scripts/synth.py",
+    "custom_designs/custom_design_v2/scripts/run_sta.py",
+    "custom_designs/custom_design_v2/scripts/cdc_constraints.py",
+    "custom_designs/custom_design_v2/scripts/sta.tcl",
+    "custom_designs/custom_design_v2/scripts/endpoint_slacks.tcl",
+    "custom_designs/custom_design_v2/tests/tb.sv",
+    "ShinkaEvolve/shinka/llm/providers/headless.py",
+    "shinka_optimizer/guidance/window_engine_timing.txt.enc",
+    "shinka_optimizer/guidance/benchmark_requirements.txt.enc",
+    "shinka_optimizer/guidance/rtl_reasoning.txt.enc",
+    "ShinkaEvolve/shinka/core/async_runner.py",
+    "shinka_optimizer/adapters/power_window.py",
+    "shinka_optimizer/guidance/window_engine_ppa.txt.enc",
+    "timing_closure/fa_map.v",
+    "ShinkaEvolve/shinka/database/dbase.py",
+    "ShinkaEvolve/shinka/database/parents.py",
+    "ShinkaEvolve/shinka/database/inspirations.py"
+  ],
+  "experiment_policy": true,
+  "allow_implementation_bundle": true,
+  "optimization": {
+    "mode": "timing_then_ppa",
+    "area_reference_um2": 100000,
+    "power_reference_w": 1,
+    "preclosure_ppa_budget": 0.05,
+    "closing_policy": "stop_at_closure"
+  },
+  "goal_file": "shinka_optimizer/guidance/window_engine_timing_ppa_v10.goal.txt.enc"
+}
